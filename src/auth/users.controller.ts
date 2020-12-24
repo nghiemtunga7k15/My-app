@@ -1,9 +1,11 @@
-import { Controller,Post,Body,Get,Param,Patch,Delete,HttpStatus,HttpException, UseGuards, Req, Query } from '@nestjs/common';
+import { Controller,Post,Body,Get,Param,Patch,Delete,HttpStatus,HttpException, UseGuards, Req, Query, Res } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { utils } from './../utils/function';
 import * as jwt from 'jsonwebtoken';
 import { AuthGuard } from "@nestjs/passport";
-import { Request } from "express";
+import { Request, Response } from "express";
+import * as speakeasy from 'speakeasy';
+import * as QRCode from 'qrcode';
 
 @Controller('auth')
 export class UsersController {
@@ -41,6 +43,7 @@ export class UsersController {
     @Post('/login')  async login(
         @Body('email') email: string,
         @Body('password') password: string,
+        @Body('2fa') twoFactorAuthenticationCode: string,
     )  {
       try { 
         let hash  = await utils.hashPassword(password);
@@ -48,16 +51,35 @@ export class UsersController {
             email,
             password,
         );
-        user.password = undefined;
-        let token = jwt.sign({
-          data: user
-        }, 'secret');
-        return {
-            statusCode: HttpStatus.OK,
-            message: 'User login successfully',
-            user,
-            token
-        };
+        const isCodeValid = await utils.verifyTwoFactorAuthenticationCode(twoFactorAuthenticationCode, user);
+        if (user.isTwoFactorAuthenticationEnabled){
+            user.password = undefined;
+            let token = jwt.sign({
+              data: user
+            }, 'secret');
+            return {
+                statusCode: HttpStatus.OK,
+                message: 'User login successfully',
+                user,
+                token
+            };
+        }else if (isCodeValid){
+            user.password = undefined;
+            let token = jwt.sign({
+              data: user
+            }, 'secret');
+            return {
+                statusCode: HttpStatus.OK,
+                message: 'User login successfully',
+                user,
+                token
+            };
+        }else{
+          return {
+                statusCode: HttpStatus.NOT_FOUND,
+                message: 'Two Factor AuthenticationCode Wrong',
+          };
+        }
       }catch(e){
         throw new HttpException({
           status: HttpStatus.NOT_FOUND,

@@ -4,4 +4,6 @@ export interface User extends mongoose.Document {
   age     : number;
   email   : string;
   password: string;
+  twoFactorAuthenticationCode: string;
+  isTwoFactorAuthenticationEnabled: boolean;
 }

@@ -1,4 +1,5 @@
 import * as bcrypt from'bcrypt';
+import * as speakeasy from 'speakeasy';
 
 export const utils = {
 	hashPassword : password => {
@@ -9,6 +10,13 @@ export const utils = {
 			    });
 			});
 		});
-  	}
+  	},
+  	 verifyTwoFactorAuthenticationCode : (twoFactorAuthenticationCode: string, user: any) => {
+        return speakeasy.totp.verify({
+            secret: user.twoFactorAuthenticationCode,
+            encoding: 'base32',
+            token: twoFactorAuthenticationCode,
+        });
+    }
 
 }
