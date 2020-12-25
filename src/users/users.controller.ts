@@ -68,17 +68,26 @@ export class UsersController {
     )  {
       try { 
         let  { email }  = req.user;
-        const secretCode = speakeasy.generateSecret({
+        const secretCode = speakeasy.generateSecret({ 
             name: 'My-Project',
         });
         const user = await this.usersService.update(
             email,
             {twoFactorAuthenticationCode : secretCode.base32}
         );
-        function respondWithQRCode(data: string, response: Response) {
-            QRCode.toFileStream(response, data);
-        }
-        respondWithQRCode(secretCode.otpauth_url, res)
+        QRCode.toDataURL(secretCode.otpauth_url, function(err, imagedata) { 
+            console.log(imagedata)
+            return {
+                statusCode: 'imagedata.toString()',
+                message: 'User detail successfully',
+            };
+        });
+         // A data URI for the QR code image }); 
+
+        // function respondWithQRCode(data: string, response: Response) {
+        //     QRCode.toFileStream(response, data);
+        // }
+        // respondWithQRCode(secretCode.otpauth_url, res)
 
       }catch(e){
         throw new HttpException({
