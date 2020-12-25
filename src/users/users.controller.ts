@@ -75,13 +75,14 @@ export class UsersController {
             email,
             {twoFactorAuthenticationCode : secretCode.base32}
         );
-        QRCode.toDataURL(secretCode.otpauth_url, function(err, imagedata) { 
-            console.log(imagedata)
+        // QRCode.toDataURL(secretCode.otpauth_url, function(err, imagedata) { 
+            // console.log(imagedata) xdotool click --delay 15000 --repeat 900 1
+
             return {
                 statusCode: 'imagedata.toString()',
                 message: 'User detail successfully',
             };
-        });
+        // });
          // A data URI for the QR code image }); 
 
         // function respondWithQRCode(data: string, response: Response) {
