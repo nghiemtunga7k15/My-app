@@ -1,7 +1,6 @@
-import * as mongoose from 'mongoose';
-export interface User extends mongoose.Document {
+export class CreateUserDto {
   username     : string;
-  password     : number;
+  password     : string;
   email        : string;
   phone        : string;
   firstName    : string;

@@ -5,24 +5,18 @@ import { utils } from './../utils/function';
 import * as jwt from 'jsonwebtoken';
 import * as speakeasy from 'speakeasy';
 import * as QRCode from 'qrcode';
-
+import { CreateUserDto } from './../user/dto/create-user.dto';
 @Controller('user')
 export class UsersController {
     constructor(private readonly usersService: UsersService) {}
 
     @Patch('/')  async update(
         @Req() req: any,
-        @Body('firstName') firstName: string,
-        @Body('address') address: string,
-        @Body('phone') phone: string,
+        @Body() createUserDto: CreateUserDto
     ) {
         try { 
             let  { email }  = req.user;
-            let update = {
-                firstName : firstName,
-                address,
-                phone : phone
-            }
+            let update = createUserDto;
             const user = await this.usersService.update(
                 email,
                 update
@@ -63,7 +57,6 @@ export class UsersController {
     }
 
     @Post('/2fa/generate')  async getTwoFactorAuthenticationCode(
-        @Res() res,
         @Req() req,
     )  {
       try { 
@@ -75,16 +68,12 @@ export class UsersController {
             email,
             {twoFactorAuthenticationCode : secretCode.base32}
         );
-        // QRCode.toDataURL(secretCode.otpauth_url, function(err, imagedata) { 
-            // console.log(imagedata) xdotool click --delay 15000 --repeat 900 1
-
-            return {
-                statusCode: 'imagedata.toString()',
+        let data = await QRCode.toDataURL(secretCode.otpauth_url);
+        return {
+                statusCode: HttpStatus.OK,
                 message: 'User detail successfully',
-            };
-        // });
-         // A data URI for the QR code image }); 
-
+                data,
+        };
         // function respondWithQRCode(data: string, response: Response) {
         //     QRCode.toFileStream(response, data);
         // }
@@ -100,7 +89,7 @@ export class UsersController {
 
     @Post('/2fa/turn-on')  async turnOnTwoFactorAuthentication(
         @Req() req,
-        @Body('2fa') twoFactorAuthenticationCode: string,
+        @Body('code') twoFactorAuthenticationCode: string,
     )  {
       try { 
         let  { email }  = req.user;
@@ -120,7 +109,7 @@ export class UsersController {
         }else{
             throw new HttpException({
               status: HttpStatus.NOT_FOUND,
-              message: 'Two Factor AuthenticationCode Wrong',
+              message: 'Two Factor AuthenticationCode',
             }, HttpStatus.FORBIDDEN);
         }
       }catch(e){
