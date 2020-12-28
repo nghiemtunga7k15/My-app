@@ -5,7 +5,7 @@ import { utils } from './../utils/function';
 import * as jwt from 'jsonwebtoken';
 import * as speakeasy from 'speakeasy';
 import * as QRCode from 'qrcode';
-import { CreateUserDto } from './../user/dto/create-user.dto';
+import { CreateUserDto } from './../auth/dto/create-user.dto';
 @Controller('/profile')
 export class UsersController {
     constructor(private readonly usersService: UsersService) {}

@@ -1,7 +1,7 @@
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
-import { UsersSchema }  from './../user/entities/user.entity';
+import { UsersSchema }  from './../auth/entities/user.entity';
 import { logger }  from './../errors/index';
 import { MongooseModule } from '@nestjs/mongoose';
 @Module({
