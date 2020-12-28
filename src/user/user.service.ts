@@ -13,9 +13,9 @@ export class UserService {
     const result = await doc.save();
     return result;
   }
-  async login(email: string, hashedPassword: string) {
+  async login(username: string, hashedPassword: string) {
     try {
-      const user = await this.userModel.findOne({email}).exec();
+      const user = await this.userModel.findOne({username}).exec();
       const match = await bcrypt.compare(hashedPassword, user.password);
       if (match == false) {
         throw new Error('Email or Password Wrong');
@@ -24,5 +24,13 @@ export class UserService {
     } catch (error) {
       throw new Error('Email or Password Wrong');
     }
+  }
+  async update(email ,update: any) {
+    const filter = { email };
+    let doc = await this.userModel.findOneAndUpdate(filter, update);
+    if (!doc) {
+        throw new Error('User Not Found');
+    }
+    return doc;
   }
 }

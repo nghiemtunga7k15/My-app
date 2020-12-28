@@ -10,12 +10,13 @@ import { CreateUserDto } from './../user/dto/create-user.dto';
 export class UsersController {
     constructor(private readonly usersService: UsersService) {}
 
-    @Patch('/')  async update(
+    @Patch('/:email')  async update(
         @Req() req: any,
+        @Param() query: any,
         @Body() createUserDto: CreateUserDto
     ) {
         try { 
-            let  { email }  = req.user;
+            let  { email }  = query;
             let update = createUserDto;
             const user = await this.usersService.update(
                 email,
@@ -33,12 +34,13 @@ export class UsersController {
         }  
     }
 
-    @Get('/')  async findOne(
+    @Get('/:email')  async findOne(
         @Req() req: any ,
+        @Param() query: any,
     ) {
         try { 
 
-            let  { email }  = req.user;
+            let  { email }  = query;
             const user = await this.usersService.findOne(
                 email,
             );

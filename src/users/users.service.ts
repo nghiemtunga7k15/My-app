@@ -6,19 +6,7 @@ import { User } from './../interfaces/IUser';
 @Injectable()
 export class UsersService {
   constructor(@InjectModel('User') private readonly userModel: Model<User>) {}
-
-  async create(firstName: string, age: number, email: string, password: string, address: string) {
-    const doc = new this.userModel({
-      firstName,
-      age,
-      email,
-      password,
-      address,
-    });
-    const result = await doc.save();
-    return result;
-  }
-  
+ 
   async findOne(email: string) {
     const doc = await this.userModel.findOne({email}).exec();
     if (!doc) {

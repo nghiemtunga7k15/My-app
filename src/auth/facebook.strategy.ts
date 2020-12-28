@@ -8,7 +8,7 @@ export class FacebookStrategy extends PassportStrategy(Strategy, "facebook") {
     super({
       clientID: '2874047096176507',
       clientSecret: '5b47c86e006968d31d9f41e03e1473c3',
-      callbackURL: 'http://localhost:3001/auth/facebook/redirect',
+      callbackURL: 'http://localhost:3000/auth/facebook/redirect',
       scope: "email",
       profileFields: ["emails", "name"],
     });

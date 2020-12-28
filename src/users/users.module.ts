@@ -9,11 +9,11 @@ import { MongooseModule } from '@nestjs/mongoose';
   controllers: [UsersController],
   providers: [UsersService]
 })
-export class UsersModule implements NestModule {
- configure(consumer: MiddlewareConsumer) {
- consumer
-  .apply(logger)
-  .forRoutes(UsersController);
- }
+export class UsersModule  {
+ // configure(consumer: MiddlewareConsumer) {
+ // consumer
+ //  .apply(logger)
+ //  .forRoutes(UsersController);
+ // }
 }
 

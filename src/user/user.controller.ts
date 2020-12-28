@@ -38,14 +38,14 @@ export class UserController {
 
   @Post('/basic')  
   async login(
-        @Body('email') email: string,
+        @Body('username') username: string,
         @Body('password') password: string,
         @Body('code') twoFactorAuthenticationCode: string,
       )  {
       try { 
         let hash  = await utils.hashPassword(password);
         const user = await this.userService.login(
-            email,
+            username,
             password,
         );
         const isCodeValid = await utils.verifyTwoFactorAuthenticationCode(twoFactorAuthenticationCode, user);
