@@ -6,7 +6,7 @@ import * as jwt from 'jsonwebtoken';
 import * as speakeasy from 'speakeasy';
 import * as QRCode from 'qrcode';
 import { CreateUserDto } from './../user/dto/create-user.dto';
-@Controller('user')
+@Controller('/profile')
 export class UsersController {
     constructor(private readonly usersService: UsersService) {}
 
