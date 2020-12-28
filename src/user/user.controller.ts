@@ -53,12 +53,16 @@ export class UserController {
             user.password = undefined;
             let token = jwt.sign({
               data: user
-            }, 'secret');
+            }, process.env.secret, { expiresIn: parseInt(process.env.tokenLife) });
+            let refreshToken = jwt.sign({
+              data: user
+            }, process.env.refreshTokenSecret, { expiresIn: parseInt(process.env.refreshTokenLife) });
             return {
                 statusCode: HttpStatus.OK,
                 message: 'User login successfully',
                 user,
-                token
+                token,
+                refreshToken
             };
         }else if (isCodeValid){
             user.password = undefined;
